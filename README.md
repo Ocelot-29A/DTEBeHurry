@@ -6,7 +6,7 @@ A static, automatically updated history chart for the percentage of DTE customer
 
 - `site/` — the complete static site published to GitHub Pages.
 - `scripts/update_history.py` — fetches DTE's public service-area summary and appends one validated observation.
-- `.github/workflows/update-and-deploy.yml` — runs every 15 minutes, commits new observations, and deploys GitHub Pages.
+- `.github/workflows/update-and-deploy.yml` — runs every 5 minutes, commits new observations, and deploys GitHub Pages.
 - A 400-day rolling history, configurable with the `DTE_HISTORY_RETENTION_DAYS` environment variable.
 
 The site uses DTE's public `https://outage.dteenergy.com/situations.json` response. Power Interrupted is calculated as:

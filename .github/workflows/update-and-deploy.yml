@@ -2,7 +2,7 @@ name: Update outage history and deploy Pages
 
 on:
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "*/5 * * * *"
       timezone: "America/Detroit"
   workflow_dispatch:
   push:
