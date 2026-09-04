@@ -50,7 +50,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 94px;
+  height: 72px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -109,18 +109,18 @@ a {
   color: var(--signal-dark);
 }
 
-.hero {
+.overview {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.55fr);
-  gap: clamp(42px, 8vw, 140px);
-  align-items: end;
-  min-height: 540px;
-  padding: 72px 0 64px;
+  grid-template-columns: minmax(250px, 0.7fr) minmax(620px, 1.3fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
 }
 
 .eyebrow,
 .section-kicker {
-  margin: 0 0 20px;
+  margin: 0 0 9px;
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 800;
@@ -138,135 +138,75 @@ a {
   box-shadow: 0 0 0 5px rgba(238, 91, 53, 0.12);
 }
 
-h1 {
-  max-width: 850px;
+.overview h1 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(4.4rem, 10.5vw, 10rem);
+  font-size: clamp(2rem, 3.4vw, 3.15rem);
   font-weight: 400;
-  letter-spacing: -0.07em;
-  line-height: 0.75;
+  letter-spacing: -0.045em;
+  line-height: 1;
 }
 
-.hero-description {
-  max-width: 600px;
-  margin: 42px 0 0;
-  color: var(--muted);
-  font-size: clamp(1rem, 1.5vw, 1.22rem);
-  line-height: 1.65;
-}
-
-.current-reading {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(32px, 4vw, 56px);
-  color: var(--white);
-  background: var(--ink);
-  border-radius: 2px;
-  box-shadow: var(--shadow);
-}
-
-.current-reading::after {
-  position: absolute;
-  right: -60px;
-  top: -80px;
-  width: 190px;
-  height: 190px;
-  border: 34px solid rgba(255, 255, 255, 0.055);
-  border-radius: 50%;
-  content: "";
-}
-
-.reading-label,
-.reading-unit,
-.reading-time {
-  color: rgba(255, 253, 248, 0.62);
-}
-
-.reading-label {
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.reading-value {
-  margin: 24px 0 0;
-  color: var(--white);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(5rem, 9vw, 8.5rem);
-  letter-spacing: -0.07em;
-  line-height: 0.9;
-}
-
-.reading-value span {
-  color: var(--signal);
-  font-size: 0.45em;
-  vertical-align: 0.62em;
-}
-
-.reading-unit {
-  margin-top: 10px;
-  font-size: 0.88rem;
-}
-
-.reading-rule {
-  height: 1px;
-  margin: 36px 0 24px;
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.reading-time {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  font-size: 0.78rem;
-}
-
-.reading-time strong {
-  color: var(--white);
-  font-weight: 650;
-  text-align: right;
-}
-
-.stat-strip {
+.overview-readings {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: 0.8fr 1fr 1fr 1.4fr;
+  min-width: 0;
 }
 
-.stat {
+.overview-reading {
   display: flex;
   flex-direction: column;
-  min-height: 142px;
-  padding: 32px 5vw 30px 0;
-}
-
-.stat + .stat {
-  padding-left: 5vw;
+  justify-content: center;
+  min-width: 0;
+  min-height: 64px;
+  padding: 0 clamp(14px, 2.2vw, 32px);
   border-left: 1px solid var(--line);
 }
 
-.stat-label {
-  margin-bottom: 13px;
+.overview-reading span {
+  margin-bottom: 7px;
   color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 750;
-  letter-spacing: 0.08em;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
-.stat strong {
+.overview-reading strong {
+  overflow: hidden;
+  font-size: clamp(0.9rem, 1.35vw, 1.18rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overview-reading-primary strong {
+  overflow: visible;
+  color: var(--signal-dark);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.8rem, 3vw, 2.65rem);
+  font-size: clamp(2rem, 3.5vw, 3rem);
   font-weight: 400;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.055em;
+  line-height: 0.85;
+}
+
+.overview-reading-primary strong span {
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.52em;
+  letter-spacing: 0;
+  vertical-align: 0.55em;
+}
+
+.overview-reading-time strong {
+  font-size: 0.78rem;
+  white-space: normal;
 }
 
 .chart-section {
-  margin: 100px 0 0;
-  padding: clamp(28px, 4vw, 58px);
+  margin: 22px 0 0;
+  padding: clamp(24px, 3vw, 42px);
   background: var(--white);
   box-shadow: var(--shadow);
 }
@@ -287,7 +227,7 @@ h1 {
 .method-note h2 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2rem, 4vw, 3.6rem);
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
   font-weight: 400;
   letter-spacing: -0.045em;
 }
@@ -326,13 +266,13 @@ h1 {
 
 .chart-frame {
   position: relative;
-  min-height: 470px;
-  margin-top: 32px;
+  min-height: 430px;
+  margin-top: 22px;
 }
 
 #outage-chart {
   width: 100%;
-  height: 470px;
+  height: 430px;
 }
 
 .chart-empty {
@@ -403,37 +343,27 @@ footer {
     width: min(100% - 32px, 720px);
   }
 
-  .hero {
+  .overview {
     grid-template-columns: 1fr;
-    min-height: 0;
-    padding-top: 64px;
+    gap: 20px;
+    padding: 24px 0;
   }
 
-  h1 {
-    font-size: clamp(4rem, 18vw, 7.2rem);
+  .overview h1 {
+    font-size: 2.8rem;
   }
 
-  .current-reading {
-    width: 100%;
+  .overview-readings {
+    grid-template-columns: 0.7fr 1fr 1fr 1.4fr;
   }
 
-  .stat-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .stat {
-    min-height: 115px;
-    padding: 25px 0;
-  }
-
-  .stat + .stat {
+  .overview-reading:first-child {
     padding-left: 0;
-    border-top: 1px solid var(--line);
     border-left: 0;
   }
 
   .chart-section {
-    margin-top: 70px;
+    margin-top: 20px;
   }
 
   .chart-header {
@@ -462,12 +392,30 @@ footer {
     font-size: 1.2rem;
   }
 
-  .hero {
-    padding: 48px 0;
+  .overview {
+    gap: 18px;
+    padding: 22px 0;
   }
 
-  .hero-description {
-    margin-top: 32px;
+  .overview h1 {
+    font-size: 2.45rem;
+  }
+
+  .overview-readings {
+    grid-template-columns: 0.8fr 1.2fr 1.5fr;
+  }
+
+  .overview-reading {
+    min-height: 58px;
+    padding: 0 12px;
+  }
+
+  .overview-reading:nth-child(3) {
+    display: none;
+  }
+
+  .overview-reading-time strong {
+    font-size: 0.7rem;
   }
 
   .chart-section {
@@ -478,8 +426,8 @@ footer {
 
   .chart-frame,
   #outage-chart {
-    height: 410px;
-    min-height: 410px;
+    height: 390px;
+    min-height: 390px;
   }
 
   .chart-footer,

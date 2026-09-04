@@ -30,7 +30,6 @@ const elements = {
   sourceUpdated: document.querySelector("#source-updated"),
   affected: document.querySelector("#customers-affected"),
   total: document.querySelector("#total-customers"),
-  historyDuration: document.querySelector("#history-duration"),
   fetchedAt: document.querySelector("#fetched-at"),
   samplingNote: document.querySelector("#sampling-note"),
   empty: document.querySelector("#chart-empty"),
@@ -57,14 +56,6 @@ function deduplicateAndSort(points) {
   return [...byTimestamp.values()].sort((a, b) => a.timestamp - b.timestamp);
 }
 
-function formatDuration(milliseconds) {
-  if (milliseconds < 60 * 60 * 1000) return "Less than 1 hour";
-  const hours = Math.round(milliseconds / (60 * 60 * 1000));
-  if (hours < 48) return `${hours} hours`;
-  const days = Math.round(hours / 24);
-  return `${numberFormatter.format(days)} days`;
-}
-
 function formatInterval(milliseconds) {
   const minutes = Math.max(1, Math.round(milliseconds / 60000));
   if (minutes < 60) return `${minutes} min`;
@@ -73,15 +64,49 @@ function formatInterval(milliseconds) {
   return `${Math.round(hours / 24)} day`;
 }
 
-function selectVisiblePoints(start, end) {
-  const inside = observations.filter((point) => point.timestamp >= start && point.timestamp <= end);
-  if (inside.length) return inside;
+function lowerBound(timestamp) {
+  let low = 0;
+  let high = observations.length;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (observations[middle].timestamp < timestamp) low = middle + 1;
+    else high = middle;
+  }
+  return low;
+}
 
-  const nearest = observations.reduce((best, point) => {
-    const distance = Math.min(Math.abs(point.timestamp - start), Math.abs(point.timestamp - end));
-    return !best || distance < best.distance ? { point, distance } : best;
-  }, null);
-  return nearest ? [nearest.point] : [];
+function upperBound(timestamp) {
+  let low = 0;
+  let high = observations.length;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (observations[middle].timestamp <= timestamp) low = middle + 1;
+    else high = middle;
+  }
+  return low;
+}
+
+function interpolatedPoint(timestamp) {
+  if (!observations.length) return null;
+  const rightIndex = lowerBound(timestamp);
+  if (rightIndex === 0) return observations[0];
+  if (rightIndex === observations.length) return observations.at(-1);
+
+  const left = observations[rightIndex - 1];
+  const right = observations[rightIndex];
+  if (right.timestamp === timestamp) return right;
+  const ratio = (timestamp - left.timestamp) / (right.timestamp - left.timestamp);
+  return { timestamp, value: left.value + (right.value - left.value) * ratio };
+}
+
+function selectVisibleWindow(start, end) {
+  const firstInsideIndex = lowerBound(start);
+  const afterEndIndex = upperBound(end);
+  const inside = observations.slice(firstInsideIndex, afterEndIndex);
+  const previous = firstInsideIndex > 0 ? observations[firstInsideIndex - 1] : null;
+  const next = afterEndIndex < observations.length ? observations[afterEndIndex] : null;
+  const yPoints = [interpolatedPoint(start), ...inside, interpolatedPoint(end)].filter(Boolean);
+  return { inside, previous, next, yPoints };
 }
 
 function sampleForHover(points, start, end) {
@@ -125,9 +150,21 @@ function yBounds(points) {
   const span = Math.max(high - low, 0.2);
   const padding = Math.max(span * 0.16, 0.08);
   return {
-    min: Math.max(0, Number((low - padding).toFixed(2))),
-    max: Math.min(100, Number((high + padding).toFixed(2))),
+    min: Math.max(0, Number((low - padding).toFixed(4))),
+    max: Math.min(100, Number((high + padding).toFixed(4))),
   };
+}
+
+function yAxisDecimals(bounds) {
+  const approximateTickSize = Math.max((bounds.max - bounds.min) / 5, 0.0001);
+  if (approximateTickSize >= 1) return 0;
+  return Math.min(4, Math.max(1, Math.ceil(-Math.log10(approximateTickSize))));
+}
+
+function uniqueByTimestamp(points) {
+  const unique = new Map();
+  points.filter(Boolean).forEach((point) => unique.set(point.timestamp, point));
+  return [...unique.values()].sort((a, b) => a.timestamp - b.timestamp);
 }
 
 function updateRangeButton() {
@@ -144,15 +181,24 @@ function updateRangeButton() {
 }
 
 function renderVisibleRange() {
-  const rawVisible = selectVisiblePoints(visibleRange.start, visibleRange.end);
-  const sampled = sampleForHover(rawVisible, visibleRange.start, visibleRange.end);
-  const bounds = yBounds(rawVisible);
+  const windowData = selectVisibleWindow(visibleRange.start, visibleRange.end);
+  const sampled = sampleForHover(windowData.inside, visibleRange.start, visibleRange.end);
+  const renderPoints = uniqueByTimestamp([windowData.previous, ...sampled.points, windowData.next]);
+  const bounds = yBounds(windowData.yPoints);
+  const decimals = yAxisDecimals(bounds);
   const showSymbols = sampled.points.length <= 90;
 
   chart.setOption({
-    yAxis: { min: bounds.min, max: bounds.max },
+    yAxis: {
+      min: bounds.min,
+      max: bounds.max,
+      axisLabel: {
+        color: "#657181",
+        formatter: (value) => `${Number(value).toFixed(decimals)}%`,
+      },
+    },
     series: [{
-      data: sampled.points.map((point) => ({
+      data: renderPoints.map((point) => ({
         value: [point.timestamp, point.value],
         customersAffected: point.customersAffected,
         totalCustomers: point.totalCustomers,
@@ -161,9 +207,13 @@ function renderVisibleRange() {
     }],
   });
 
-  elements.samplingNote.textContent = sampled.minimumInterval
-    ? `${numberFormatter.format(rawVisible.length)} observations · hover points spaced by at least ${formatInterval(sampled.minimumInterval)}`
-    : `${numberFormatter.format(rawVisible.length)} observation${rawVisible.length === 1 ? "" : "s"} in view · every point is interactive`;
+  if (!windowData.inside.length && renderPoints.length > 1) {
+    elements.samplingNote.textContent = "No reading inside this window · line interpolated from adjacent observations";
+  } else {
+    elements.samplingNote.textContent = sampled.minimumInterval
+      ? `${numberFormatter.format(windowData.inside.length)} observations · hover points spaced by at least ${formatInterval(sampled.minimumInterval)}`
+      : `${numberFormatter.format(windowData.inside.length)} observation${windowData.inside.length === 1 ? "" : "s"} in view · every point is interactive`;
+  }
   updateRangeButton();
 }
 
@@ -255,7 +305,7 @@ function chartOptions() {
         name: "Power Interrupted",
         type: "line",
         data: [],
-        smooth: 0.16,
+        smooth: false,
         connectNulls: false,
         showSymbol: true,
         symbol: "circle",
@@ -304,7 +354,6 @@ function updateSummary(data) {
   elements.sourceUpdated.textContent = dateTimeFormatter.format(new Date(latest.timestamp));
   elements.affected.textContent = numberFormatter.format(latest.customersAffected);
   elements.total.textContent = numberFormatter.format(latest.totalCustomers);
-  elements.historyDuration.textContent = formatDuration(latest.timestamp - observations[0].timestamp);
   elements.fetchedAt.textContent = data.generatedAt
     ? `Last fetched ${dateTimeFormatter.format(new Date(data.generatedAt))}`
     : "Latest source timestamp shown above";

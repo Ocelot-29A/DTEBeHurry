@@ -34,39 +34,28 @@
       </header>
 
       <main>
-        <section class="hero" aria-labelledby="page-title">
-          <div class="hero-copy">
-            <p class="eyebrow"><span class="live-dot"></span>DTE service area monitor</p>
-            <h1 id="page-title">Power<br />Interrupted</h1>
-            <p class="hero-description">
-              A clearer view of how much of the DTE customer base is currently without power.
-            </p>
+        <section class="overview" aria-labelledby="page-title">
+          <div class="overview-title">
+            <p class="eyebrow"><span class="live-dot"></span>Live DTE service-area monitor</p>
+            <h1 id="page-title">Power Interrupted</h1>
           </div>
-
-          <div class="current-reading" aria-live="polite">
-            <div class="reading-label">Latest reading</div>
-            <div class="reading-value" id="current-percentage">—</div>
-            <div class="reading-unit">of customers</div>
-            <div class="reading-rule"></div>
-            <div class="reading-time">
+          <div class="overview-readings" aria-label="Latest outage statistics" aria-live="polite">
+            <div class="overview-reading overview-reading-primary">
+              <span>Now</span>
+              <strong id="current-percentage">—</strong>
+            </div>
+            <div class="overview-reading">
+              <span>Interrupted</span>
+              <strong id="customers-affected">—</strong>
+            </div>
+            <div class="overview-reading">
+              <span>Customers tracked</span>
+              <strong id="total-customers">—</strong>
+            </div>
+            <div class="overview-reading overview-reading-time">
               <span>Source updated</span>
               <strong id="source-updated">Loading…</strong>
             </div>
-          </div>
-        </section>
-
-        <section class="stat-strip" aria-label="Latest outage statistics">
-          <div class="stat">
-            <span class="stat-label">Customers interrupted</span>
-            <strong id="customers-affected">—</strong>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Total customers tracked</span>
-            <strong id="total-customers">—</strong>
-          </div>
-          <div class="stat">
-            <span class="stat-label">History collected</span>
-            <strong id="history-duration">—</strong>
           </div>
         </section>
 
