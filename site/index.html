@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A lightweight history view of the DTE service area's Power Interrupted percentage."
+    />
+    <meta name="theme-color" content="#f4f1ea" />
+    <title>DTE Be Hurry — Power Interrupted</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="DTE Be Hurry home">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span class="brand-name">DTE <em>Be Hurry</em></span>
+        </a>
+        <a
+          class="source-link"
+          href="https://outage.dteenergy.com/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          DTE outage source
+          <span aria-hidden="true">↗</span>
+        </a>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="live-dot"></span>DTE service area monitor</p>
+            <h1 id="page-title">Power<br />Interrupted</h1>
+            <p class="hero-description">
+              A clearer view of how much of the DTE customer base is currently without power.
+            </p>
+          </div>
+
+          <div class="current-reading" aria-live="polite">
+            <div class="reading-label">Latest reading</div>
+            <div class="reading-value" id="current-percentage">—</div>
+            <div class="reading-unit">of customers</div>
+            <div class="reading-rule"></div>
+            <div class="reading-time">
+              <span>Source updated</span>
+              <strong id="source-updated">Loading…</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="stat-strip" aria-label="Latest outage statistics">
+          <div class="stat">
+            <span class="stat-label">Customers interrupted</span>
+            <strong id="customers-affected">—</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Total customers tracked</span>
+            <strong id="total-customers">—</strong>
+          </div>
+          <div class="stat">
+            <span class="stat-label">History collected</span>
+            <strong id="history-duration">—</strong>
+          </div>
+        </section>
+
+        <section class="chart-section" aria-labelledby="chart-title">
+          <div class="chart-header">
+            <div>
+              <p class="section-kicker">Outage history</p>
+              <h2 id="chart-title">Interrupted customer share</h2>
+            </div>
+            <div class="range-controls" role="group" aria-label="Chart time range">
+              <button type="button" data-range="6h">6H</button>
+              <button type="button" data-range="24h">24H</button>
+              <button type="button" data-range="7d">7D</button>
+              <button type="button" data-range="30d">30D</button>
+              <button type="button" data-range="all">ALL</button>
+            </div>
+          </div>
+
+          <div class="chart-frame">
+            <div
+              id="outage-chart"
+              role="img"
+              aria-label="Line chart of the percentage of DTE customers with power interrupted over time"
+            ></div>
+            <div class="chart-empty" id="chart-empty" hidden>
+              <strong>Waiting for history</strong>
+              <span>The first data point will appear after the updater runs.</span>
+            </div>
+          </div>
+
+          <div class="chart-footer">
+            <span id="sampling-note">Loading observations…</span>
+            <span>Scroll or pinch to zoom · drag to pan · hover for details</span>
+          </div>
+        </section>
+
+        <section class="method-note">
+          <span class="method-index">01</span>
+          <div>
+            <h2>How this is calculated</h2>
+            <p>
+              Power Interrupted is calculated as customers affected divided by total customers in
+              the DTE service area. Data is collected periodically from DTE’s public outage summary.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>Independent community tracker</span>
+        <span id="fetched-at">Data fetch status unavailable</span>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js" integrity="sha256-v0oiNSTkC3fDBL7GfhIiz1UfFIgM9Cxp3ARlWOEcB7E=" crossorigin="anonymous"></script>
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
