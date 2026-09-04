@@ -23,6 +23,7 @@ customersAffected / totalCustomers * 100
 4. If the history commit reports a permission error, open **Settings → Actions → General → Workflow permissions**, select **Read and write permissions**, and save. The workflow already requests only the permissions it needs.
 
 After the first successful run, the deployment URL appears in the workflow summary and in **Settings → Pages**.
+Until the source is switched, the root `index.html` provides a compatible redirect for branch-based Pages publishing.
 
 ## Run locally
 
