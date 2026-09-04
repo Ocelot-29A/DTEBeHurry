@@ -2,7 +2,9 @@ name: Update outage history and deploy Pages
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    # DTE normally timestamps new summaries near :09:59, :19:59, etc.
+    # Run one minute later and avoid GitHub's busier exact five-minute marks.
+    - cron: "1/5 * * * *"
       timezone: "America/Detroit"
   workflow_dispatch:
   push:
