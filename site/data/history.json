@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "metric": "Power Interrupted",
   "source": "https://outage.dteenergy.com/situations.json",
-  "generatedAt": "2026-09-10T23:18:24.077793Z",
+  "generatedAt": "2026-09-10T23:26:28.587091Z",
   "points": [
     {
       "timestamp": "2026-09-04T02:09:59.997000Z",
@@ -5818,6 +5818,14 @@
       "customersAffected": 183,
       "customersWithPower": 2281612,
       "totalCustomers": 2281795,
+      "percentageWithPower": 99.99
+    },
+    {
+      "timestamp": "2026-09-10T23:19:59.985000Z",
+      "value": 0.0079,
+      "customersAffected": 181,
+      "customersWithPower": 2281619,
+      "totalCustomers": 2281800,
       "percentageWithPower": 99.99
     }
   ],
