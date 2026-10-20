@@ -2,9 +2,9 @@ name: Update outage history and deploy Pages
 
 on:
   schedule:
-    # DTE normally timestamps new summaries near :09:59, :19:59, etc.
-    # Run one minute later and avoid GitHub's busier exact five-minute marks.
-    - cron: "1/5 * * * *"
+    # Take one daily snapshot shortly after 06:00 Detroit time.
+    # The non-round minute avoids GitHub's busier exact-hour schedule boundary.
+    - cron: "11 6 * * *"
       timezone: "America/Detroit"
   workflow_dispatch:
   push:
@@ -21,7 +21,7 @@ permissions:
 
 concurrency:
   group: dte-history-and-pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   update-and-deploy:
